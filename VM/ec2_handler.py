@@ -45,6 +45,7 @@ class EC2ResourceHandler:
                 if image_name.find("ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-20180126") >= 0:
                     ami_id = image['ImageId']
                     break
+        # check desired ami id was found
         if ami_id == 'ami-965e6bf3':
             print("AMI ID SUCCESSFULLY FOUND!!!")
         return ami_id
@@ -68,9 +69,25 @@ class EC2ResourceHandler:
     
     def _get_security_groups(self):
         security_groups = []
-        
+        self.logger.info("Retrieving 'default' security group id")
+        sec_groups_response = self.client.describe_security_groups(
+            Filters=[{'Name': 'group-name',
+                      'Values': ['default']}
+                    ],
+        )
+        security_groups = sec_groups_response['SecurityGroups']
+
         # 2. Get security group id of the 'default' security group
         default_security_group_id = ''
+        for secgroup in security_groups:
+            if 'GroupName' in secgroup:
+                secgroup_name = secgroup['GroupName']
+                if secgroup_name.find("default") >= 0:
+                    default_security_group_id = secgroup['GroupId']
+                    break
+        # check for 'default' security group id
+        if default_security_group_id == "sg-5cdfe834":
+            print("SUCCESSFULLY FOUND 'default' SECURITY GROUP ID!!!")
 
         # 3. Create a new security group
         # 4. Authorize ingress traffic for the group from anywhere to Port 80 for HTTP traffic
