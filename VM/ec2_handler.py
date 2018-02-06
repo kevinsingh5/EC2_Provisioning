@@ -42,9 +42,11 @@ class EC2ResourceHandler:
             if 'Name' in image:
                 image_name = image['Name']
                 # Modify following line to search for Amazon Linux AMI for us-east-1
-                if image_name.find("ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-2018") >= 0:
+                if image_name.find("ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-20180126") >= 0:
                     ami_id = image['ImageId']
                     break
+        if ami_id == 'ami-965e6bf3':
+            print("AMI ID SUCCESSFULLY FOUND!!!")
         return ami_id
     
     def _get_userdata(self):
