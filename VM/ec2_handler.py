@@ -112,7 +112,6 @@ class EC2ResourceHandler:
         )
         print("Ingress Successfully Set %s" % data)
         
-
         security_groups.append(default_security_group_id)
         security_groups.append(http_security_group_id)
         return security_groups
@@ -140,6 +139,13 @@ class EC2ResourceHandler:
         
         # 5. Parse instance_id from the response
         instance_id = ''
+
+        instances = response['Instances']
+        for instance in instances:
+            if 'InstanceId' in instance:
+                instance_id = instance['InstanceId']
+                break
+        print("Found Instance ID: %s" % instance_id)
 
         return instance_id
 
