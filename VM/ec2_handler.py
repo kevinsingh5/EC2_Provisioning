@@ -75,11 +75,11 @@ class EC2ResourceHandler:
                       'Values': ['default']}
                     ],
         )
-        security_groups = sec_groups_response['SecurityGroups']
+        groups = sec_groups_response['SecurityGroups']
 
         # 2. Get security group id of the 'default' security group
         default_security_group_id = ''
-        for secgroup in security_groups:
+        for secgroup in groups:
             if 'GroupName' in secgroup:
                 secgroup_name = secgroup['GroupName']
                 if secgroup_name.find("default") >= 0:
