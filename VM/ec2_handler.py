@@ -90,8 +90,28 @@ class EC2ResourceHandler:
             print("SUCCESSFULLY FOUND 'default' SECURITY GROUP ID!!!")
 
         # 3. Create a new security group
+        new_security_group = self.client.create_security_group(
+            Description = "Security group for cc-a1 HTTP traffic (port 80)",
+            GroupName = "cc-a1"
+            #VpcId = ""
+            #DryRun = True
+        )
+        
         # 4. Authorize ingress traffic for the group from anywhere to Port 80 for HTTP traffic
-        http_security_group_id = ''
+        http_security_group_id = new_security_group['GroupId']
+        print('Security Group Created with id %s.' % http_security_group_id)
+
+        data = self.client.authorize_security_group_ingress(
+            GroupId = http_security_group_id,
+            IpPermissions=[
+                {'IpProtocol': 'tcp',
+                 'FromPort': 80,
+                 'ToPort': 80,
+                 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
+            ]
+        )
+        print("Ingress Successfully Set %s" % data)
+        
 
         security_groups.append(default_security_group_id)
         security_groups.append(http_security_group_id)
