@@ -42,11 +42,12 @@ class EC2ResourceHandler:
             if 'Name' in image:
                 image_name = image['Name']
                 # Modify following line to search for Amazon Linux AMI for us-east-1
-                if image_name.find("ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-20180126") >= 0:
+                #if image_name.find("ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-20180126") >= 0:
+                if image_name.find("Amazon Linux AMI 2017.09.0.20170930 x86_64 HVM EBS (high NVMe timeout)") >= 0:
                     ami_id = image['ImageId']
                     break
         # check desired ami id was found
-        if ami_id == 'ami-965e6bf3':
+        if ami_id == 'ami-3d359e47':
             print("AMI ID SUCCESSFULLY FOUND!!!")
         return ami_id
     
@@ -86,7 +87,7 @@ class EC2ResourceHandler:
                     default_security_group_id = secgroup['GroupId']
                     break
         # check for 'default' security group id
-        if default_security_group_id == "sg-5cdfe834":
+        if default_security_group_id == "sg-5a66de2d":
             print("SUCCESSFULLY FOUND 'default' SECURITY GROUP ID!!!")
 
         # 3. Create a new security group
@@ -155,7 +156,28 @@ class EC2ResourceHandler:
         self.logger.info("Entered get")
 
         # Use describe_instances call
+        response = self.client.describe_instances(
+            InstanceIds = [
+                instance_id,
+            ]
+        )
         
+        public_dns_name = ''
+        public_ip_address = ''
+        reservations = response['Reservations']
+        for reservation in reservations:
+            if 'Instances' in reservation:
+                instances = reservation['Instances']
+                for instance in instances:
+                    if 'PublicDnsName' in instance:
+                        public_dns_name = instance['PublicDnsName']
+                    if 'PublicIpAddress' in instance:
+                        public_ip_address = instance['PublicIpAddress']
+                    break
+                break
+
+        print("Public DNS Name: %s" % public_dns_name)
+        print("Public IP Address: %s" % public_ip_address)
         return
 
 
