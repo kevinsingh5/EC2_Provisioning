@@ -111,7 +111,7 @@ class EC2ResourceHandler:
                  'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
             ]
         )
-        print("Ingress Successfully Set %s" % data)
+        #print("Ingress Successfully Set %s" % data)
         
         security_groups.append(default_security_group_id)
         security_groups.append(http_security_group_id)
@@ -186,7 +186,12 @@ class EC2ResourceHandler:
         self.logger.info("Entered delete")
 
         # Use terminate_instances call
-
+        response = self.client.terminate_instances(
+            InstanceIds=[
+                instance_id,
+            ],
+        )
+        print("Instance terminated.")
         return
 
 

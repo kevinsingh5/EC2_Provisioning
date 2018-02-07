@@ -1,7 +1,7 @@
 name: Kevin Singh
 eid: ks37843
 bitbucketid: singh5
-aws_region_name: us-east-2
+aws_region_name: us-east-1
 comments: <Comments, if any>
 
 
